@@ -110,9 +110,6 @@ df.isnull().sum()/df.count()*100
 # Identify which columns are numerical and categorical:
 #
 
-# %%
-df.dtypes
-
 # %% [markdown]
 # ### TASK 1: Calculate the number of launches on each site
 #
@@ -127,6 +124,7 @@ df.dtypes
 
 # %%
 # Apply value_counts() on column LaunchSite
+df['LaunchSite'].value_counts()
 
 
 # %% [markdown]
@@ -172,7 +170,7 @@ df.dtypes
 #
 
 # %%
-# Apply value_counts on Orbit column
+df['Orbit'].value_counts()
 
 # %% [markdown]
 # ### TASK 3: Calculate the number and occurence of mission outcome per orbit type
@@ -184,6 +182,7 @@ df.dtypes
 
 # %%
 # landing_outcomes = values on Outcome column
+landing_outcomes = df['Outcome'].value_counts()
 
 # %% [markdown]
 # <code>True Ocean</code> means the mission outcome was successfully  landed to a specific region of the ocean while <code>False Ocean</code> means the mission outcome was unsuccessfully landed to a specific region of the ocean. <code>True RTLS</code> means the mission outcome was successfully  landed to a ground pad <code>False RTLS</code> means the mission outcome was unsuccessfully landed to a ground pad.<code>True ASDS</code> means the mission outcome was successfully  landed to a drone ship <code>False ASDS</code> means the mission outcome was unsuccessfully landed to a drone ship. <code>None ASDS</code> and <code>None None</code> these represent a failure to land.
@@ -212,6 +211,7 @@ bad_outcomes
 # %%
 # landing_class = 0 if bad_outcome
 # landing_class = 1 otherwise
+landing_class = df['Outcome'].apply(lambda x: 0 if x in bad_outcomes else 1)
 
 # %% [markdown]
 # This variable will represent the classification variable that represents the outcome of each launch. If the value is zero, the  first stage did not land successfully; one means  the first stage landed Successfully

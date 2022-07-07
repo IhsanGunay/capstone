@@ -356,7 +356,7 @@ data['BoosterVersion']=='Falcon 9'
 
 # %%
 # Hint data['BoosterVersion']!='Falcon 1'
-data_falcon9 = data[data['BoosterVersion']=='Falcon 9']
+data_falcon9 = data[data['BoosterVersion']=='Falcon 9'].copy()
 
 # %% [markdown]
 # Now that we have removed some values we should reset the FlgihtNumber column
@@ -394,7 +394,7 @@ data_falcon9.isnull().sum()
 mean_payload = data_falcon9["PayloadMass"].mean()
 
 # Replace the np.nan values with its mean value
-data_falcon9 = data_falcon9.replace(np.nan, mean_payload)
+data_falcon9["PayloadMass"] = data_falcon9["PayloadMass"].replace(np.nan, mean_payload)
 
 # %%
 data_falcon9.to_csv('dataset_part_1.csv', index=False)

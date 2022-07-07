@@ -57,25 +57,20 @@
 # %%
 # %load_ext sql
 
-# %%
 # %config SqlMagic.autopandas = True
 # %config SqlMagic.feedback = False
-# %config SqlMagic.displaycon = False
+# %config SqlMagic.displaylimit = False
 
-# %%
 # %sql duckdb:///:memory:
 
 # %%
 import pandas as pd
-import duckdb
-
-c = duckdb.connect()
 
 # %%
-data = pd.read_csv('Spacex.csv', parse_dates=['Date'])
+data = pd.read_csv('Spacex.csv', parse_dates=['Date'], dayfirst=True)
 
 # %%
-data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
+data = data.rename(columns={"Landing _Outcome": "Landing_Outcome"})
 
 # %% [markdown]
 # ## Tasks
@@ -88,14 +83,8 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# SELECT * 
-# FROM data
-# LIMIT 7
-
-# %% language="sql"
-# SELECT Launch_site
-# from data
-# group by launch_site
+# SELECT DISTINCT(LAUNCH_SITE)
+# FROM DATA
 
 # %% [markdown]
 # ### Task 2
@@ -104,10 +93,10 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select * 
-# from data
-# where launch_site LIKE 'CCA%'
-# limit 5
+# SELECT * 
+# FROM DATA
+# WHERE LAUNCH_SITE LIKE 'CCA%'
+# LIMIT 5
 
 # %% [markdown]
 # ### Task 3
@@ -116,9 +105,9 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select sum(PAYLOAD_MASS__KG_)
-# from data
-# where customer like '%NASA%'
+# SELECT SUM(PAYLOAD_MASS__KG_)
+# FROM DATA
+# WHERE CUSTOMER LIKE '%NASA%'
 
 # %% [markdown]
 # ### Task 4
@@ -127,9 +116,9 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select avg(payload_mass__kg_)
-# from data
-# where booster_version like 'F9 v1.1%'
+# SELECT AVG(PAYLOAD_MASS__KG_)
+# FROM DATA
+# WHERE BOOSTER_VERSION LIKE 'F9 v1.1%'
 
 # %% [markdown]
 # ### Task 5
@@ -140,10 +129,9 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# SELECT date
-# from data
-# where landing_outcome like 'Success%'
-# limit 1
+# SELECT MIN(DATE)
+# FROM DATA
+# WHERE LANDING_OUTCOME LIKE 'Success%'
 
 # %% [markdown]
 # ### Task 6
@@ -152,11 +140,11 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# SELECT booster_version, payload_mass__kg_, landing_outcome
-# from data
-# where landing_outcome like 'Success (drone ship)'
-#     and payload_mass__kg_ > 4000
-#     and payload_mass__kg_ < 6000
+# SELECT BOOSTER_VERSION, PAYLOAD_MASS__KG_, LANDING_OUTCOME
+# FROM DATA
+# WHERE LANDING_OUTCOME LIKE 'Success (drone ship)'
+#     AND PAYLOAD_MASS__KG_ > 4000
+#     AND PAYLOAD_MASS__KG_ < 6000
 
 # %% [markdown]
 # ### Task 7
@@ -165,9 +153,9 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select count(*), landing_outcome
-# from data
-# group by landing_outcome
+# SELECT LANDING_OUTCOME, COUNT(*)
+# FROM DATA
+# GROUP BY LANDING_OUTCOME
 
 # %% [markdown]
 # ### Task 8
@@ -176,10 +164,10 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select booster_version
-# from data
-# where payload_mass__kg_ = (select max(payload_mass__kg_)
-#                            from data)
+# SELECT BOOSTER_VERSION
+# FROM DATA
+# WHERE PAYLOAD_MASS__KG_ = (SELECT MAX(PAYLOAD_MASS__KG_)
+#                            FROM DATA)
 
 # %% [markdown]
 # ### Task 9
@@ -188,9 +176,10 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# SELECT booster_version, launch_site, landing_outcome, date
-# from data
-# where landing_outcome like 'Failure (drone ship)'
+# SELECT BOOSTER_VERSION, LAUNCH_SITE, LANDING_OUTCOME, DATE
+# FROM DATA
+# WHERE LANDING_OUTCOME LIKE 'Failure (drone ship)'
+#     AND YEAR(DATE) = 2015
 
 # %% [markdown]
 # ### Task 10
@@ -199,24 +188,24 @@ data = data.rename(columns={"Landing _Outcome":"Landing_Outcome"})
 #
 
 # %% language="sql"
-# select count(*), landing_outcome
-# from data
-# where date > '2010-06-04'
-# and date < '2017-03-20'
-# group by landing_outcome
+# SELECT LANDING_OUTCOME, COUNT(*) AS COUNT
+# FROM DATA
+# WHERE DATE > '2010-06-04'
+# AND DATE < '2017-03-20'
+# GROUP BY LANDING_OUTCOME
+# ORDER BY COUNT DESC
 
 # %% [markdown]
-# ### Reference Links
+# #### REFERENCE LINKS
 #
-# *   <a href ="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/instructional-labs.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab : String Patterns, Sorting and Grouping</a>
+#  *   <a href ="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/instructional-labs.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab : String Patterns, Sorting and Grouping</a>
 #
-# *   <a  href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Built-in%20functions%20/Hands-on_Lab__Built-in_Functions.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab: Built-in functions</a>
+#  *  <a  href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Built-in%20functions%20/Hands-on_Lab__Built-in_Functions.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab: Built-in functions</a>
+#  *  <a  href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/instructional-labs.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab : Sub-queries and Nested SELECT Statements</a>
 #
-# *   <a  href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/instructional-labs.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab : Sub-queries and Nested SELECT Statements</a>
+#  * <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%205/DB0201EN-Week3-1-3-SQLmagic.ipynb?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01">Hands-on Tutorial: Accessing Databases with SQL magic</a>
 #
-# *   <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%205/DB0201EN-Week3-1-3-SQLmagic.ipynb?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01">Hands-on Tutorial: Accessing Databases with SQL magic</a>
-#
-# *   <a href= "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%205/DB0201EN-Week3-1-4-Analyzing.ipynb?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01">Hands-on Lab: Analyzing a real World Data Set</a>
+#  * <a href= "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%205/DB0201EN-Week3-1-4-Analyzing.ipynb?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01">Hands-on Lab: Analyzing a real World Data Set</a>
 #
 
 # %% [markdown]

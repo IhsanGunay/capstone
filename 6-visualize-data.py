@@ -56,20 +56,13 @@
 #
 
 # %%
-# !pip3 install folium
-# !pip3 install wget
-
-# %%
 import folium
 import wget
 import pandas as pd
 
 # %%
-# Import folium MarkerCluster plugin
 from folium.plugins import MarkerCluster
-# Import folium MousePosition plugin
 from folium.plugins import MousePosition
-# Import folium DivIcon plugin
 from folium.features import DivIcon
 
 # %% [markdown]
@@ -170,9 +163,28 @@ site_map.add_child(marker)
 #
 
 # %%
-# Initial the map
 site_map = folium.Map(location=nasa_coordinate, zoom_start=5)
-# For each launch site, add a Circle object based on its coordinate (Lat, Long) values. In addition, add Launch site name as a popup label
+
+for index, record in launch_sites_df.iterrows():
+    coordinate = [record['Lat'], record['Long']]
+    site_name = record['Launch Site']
+    
+    site_map.add_child(
+        folium.Circle(
+            coordinate,
+            radius=1000, color='#d35400', fill=True).add_child(
+                folium.Popup(site_name)))
+
+    site_map.add_child(
+        folium.map.Marker(
+            coordinate, 
+            icon=DivIcon(
+                icon_size=(20,20),
+                icon_anchor=(0,0),
+                html='<div style="font-size: 12; color:#d35400;"><b>%s</b></div>'
+                    % site_name )))
+    
+site_map
 
 
 # %% [markdown]
@@ -229,14 +241,6 @@ marker_cluster = MarkerCluster()
 #
 
 # %%
-
-# Apply a function to check the value of `class` column
-# If class=1, marker_color value will be green
-# If class=0, marker_color value will be red
-
-
-# %%
-# Function to assign color to launch outcome
 def assign_marker_color(launch_outcome):
     if launch_outcome == 1:
         return 'green'
@@ -258,10 +262,12 @@ site_map.add_child(marker_cluster)
 # create a Marker object with its coordinate
 # and customize the Marker's icon property to indicate if this launch was successed or failed, 
 # e.g., icon=folium.Icon(color='white', icon_color=row['marker_color']
+
 for index, record in spacex_df.iterrows():
-    # TODO: Create and add a Marker cluster to the site map
-    # marker = folium.Marker(...)
-    marker_cluster.add_child(marker)
+    # Create and add a Marker cluster to the site map
+    marker_cluster.add_child(folium.Marker([record['Lat'], record['Long']], 
+                             icon=folium.Icon(color='white',
+                                              icon_color=record['marker_color'])))
 
 site_map
 

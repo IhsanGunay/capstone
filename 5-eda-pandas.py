@@ -81,13 +81,9 @@
 #
 
 # %%
-# andas is a software library written for the Python programming language for data manipulation and analysis.
 import pandas as pd
-#NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays
 import numpy as np
-# Matplotlib is a plotting library for python and pyplot gives us a MatLab like plotting framework. We will use this in our plotter function to plot data.
 import matplotlib.pyplot as plt
-#Seaborn is a Python data visualization library based on matplotlib. It provides a high-level interface for drawing attractive and informative statistical graphics
 import seaborn as sns
 
 # %% [markdown]
@@ -136,7 +132,10 @@ plt.show()
 #
 
 # %%
-# Plot a scatter point chart with x axis to be Flight Number and y axis to be the launch site, and hue to be the class value
+sns.catplot(y="LaunchSite", x="FlightNumber", hue="Class", data=df, aspect = 5)
+plt.xlabel("Flight Number",fontsize=20)
+plt.ylabel("Launch Site",fontsize=20)
+plt.show()
 
 
 # %% [markdown]
@@ -152,7 +151,10 @@ plt.show()
 #
 
 # %%
-# Plot a scatter point chart with x axis to be Pay Load Mass (kg) and y axis to be the launch site, and hue to be the class value
+sns.catplot(y="LaunchSite", x="PayloadMass", hue="Class", data=df, aspect = 5)
+plt.xlabel("Pay load Mass (kg)",fontsize=20)
+plt.ylabel("Launch Site",fontsize=20)
+plt.show()
 
 
 # %% [markdown]
@@ -172,7 +174,9 @@ plt.show()
 #
 
 # %%
-# HINT use groupby method on Orbit column and get the mean of Class column
+dfg = df.groupby(['Orbit'])['Class'].mean()
+dfg.plot(kind='bar', ylabel='Success Rate', xlabel='Orbit')
+plt.show()
 
 
 # %% [markdown]
@@ -189,6 +193,10 @@ plt.show()
 
 # %%
 # Plot a scatter point chart with x axis to be FlightNumber and y axis to be the Orbit, and hue to be the class value
+sns.catplot(y="Orbit", x="FlightNumber", hue="Class", data=df, aspect = 5)
+plt.xlabel("Flight Number",fontsize=20)
+plt.ylabel("Orbit",fontsize=20)
+plt.show()
 
 
 # %% [markdown]
@@ -205,6 +213,10 @@ plt.show()
 
 # %%
 # Plot a scatter point chart with x axis to be Payload and y axis to be the Orbit, and hue to be the class value
+sns.catplot(y="Orbit", x="PayloadMass", hue="Class", data=df, aspect = 5)
+plt.xlabel("Pay load Mass (kg)",fontsize=20)
+plt.ylabel("Launch Site",fontsize=20)
+plt.show()
 
 
 # %% [markdown]
@@ -227,15 +239,19 @@ plt.show()
 
 # %%
 # A function to Extract years from the date 
-year=[]
-def Extract_year(date):
+def extract_year(df):
+    year = []
     for i in df["Date"]:
         year.append(i.split("-")[0])
-    return year
+    return pd.DataFrame(year , columns=['Year'])
 
 
 # %%
 # Plot a line chart with x axis to be the extracted year and y axis to be the success rate
+df['Year'] = extract_year(df)
+
+df.groupby('Year')['Class'].mean().plot(kind='line', ylabel='Success Rate', xlabel='Year')
+plt.show()
 
 
 # %% [markdown]
@@ -283,7 +299,11 @@ features.head()
 
 # %%
 # HINT: use astype function
+features = features.astype('float64')
 
+
+# %%
+features.to_csv('dataset_part_3.csv', index=False)
 
 # %% [markdown]
 # We can now export it to a <b>CSV</b> for the next section,but to make the answers consistent, in the next lab we will provide data in a pre-selected date range.
