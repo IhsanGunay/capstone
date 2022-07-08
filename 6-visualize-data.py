@@ -87,8 +87,9 @@ from folium.features import DivIcon
 
 # %%
 # Download and read the `spacex_launch_geo.csv`
-spacex_csv_file = wget.download('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DS0321EN-SkillsNetwork/datasets/spacex_launch_geo.csv')
-spacex_df=pd.read_csv(spacex_csv_file)
+# spacex_csv_file = wget.download('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DS0321EN-SkillsNetwork/datasets/spacex_launch_geo.csv')
+# spacex_df=pd.read_csv(spacex_csv_file)
+spacex_df = pd.read_csv('spacex_launch_geo.csv')
 
 # %% [markdown]
 # Now, you can take a look at what are the coordinates for each site.
@@ -111,8 +112,8 @@ launch_sites_df
 
 # %%
 # Start location is NASA Johnson Space Center
-nasa_coordinate = [29.559684888503615, -95.0830971930759]
-site_map = folium.Map(location=nasa_coordinate, zoom_start=10)
+nasa_coordinates = [29.559684888503615, -95.0830971930759]
+site_map = folium.Map(location=nasa_coordinates, zoom_start=10)
 
 # %% [markdown]
 # We could use `folium.Circle` to add a highlighted circle area with a text label on a specific coordinate. For example,
@@ -120,10 +121,15 @@ site_map = folium.Map(location=nasa_coordinate, zoom_start=10)
 
 # %%
 # Create a blue circle at NASA Johnson Space Center's coordinate with a popup label showing its name
-circle = folium.Circle(nasa_coordinate, radius=1000, color='#d35400', fill=True).add_child(folium.Popup('NASA Johnson Space Center'))
+circle = folium.Circle(
+    nasa_coordinates, 
+    radius=1000, 
+    color='#d35400',
+    fill=True).add_child(
+        folium.Popup('NASA Johnson Space Center'))
 # Create a blue circle at NASA Johnson Space Center's coordinate with a icon showing its name
 marker = folium.map.Marker(
-    nasa_coordinate,
+    nasa_coordinates,
     # Create an icon as a text label
     icon=DivIcon(
         icon_size=(20,20),
@@ -163,21 +169,21 @@ site_map.add_child(marker)
 #
 
 # %%
-site_map = folium.Map(location=nasa_coordinate, zoom_start=5)
+site_map = folium.Map(location=nasa_coordinates, zoom_start=5)
 
 for index, record in launch_sites_df.iterrows():
-    coordinate = [record['Lat'], record['Long']]
+    coordinates = [record['Lat'], record['Long']]
     site_name = record['Launch Site']
     
     site_map.add_child(
         folium.Circle(
-            coordinate,
+            coordinates,
             radius=1000, color='#d35400', fill=True).add_child(
                 folium.Popup(site_name)))
 
     site_map.add_child(
         folium.map.Marker(
-            coordinate, 
+            coordinates, 
             icon=DivIcon(
                 icon_size=(20,20),
                 icon_anchor=(0,0),
@@ -376,14 +382,44 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 #        )
 #    )
 
+# %%
+slc_coordinates = [28.563197, -80.576820]
+coast_coordinates = [28.56368, -80.56799]
+hwy_coordinates = [28.56368, -80.85154]
+city_coordinates = [28.40173, -80.60464]
+rail_coordinates = [28.57209, -80.58526]
+coordinates = [slc_coordinates, 
+               coast_coordinates,
+               hwy_coordinates,
+               city_coordinates,
+               rail_coordinates]
+
+for i in range(1, len(coordinates)):
+    
+    lines=folium.PolyLine(locations=[coordinates[0],
+                                     coordinates[i]],
+                          weight=1)
+    site_map.add_child(lines)
+
+    distance = calculate_distance(coordinates[0][0],
+                                  coordinates[0][1],
+                                  coordinates[i][0],
+                                  coordinates[i][1])
+    distance_circle = folium.Marker(
+        coordinates[i],
+        icon=DivIcon(
+            icon_size=(20,20),
+            icon_anchor=(0,0),
+            html='<div style="font-size: 12; color:#d35400;"><b>%s</b></div>' % "{:10.2f} KM".format(distance),
+            )
+        )
+    site_map.add_child(distance_circle)
+
+site_map
+
 # %% [markdown]
 # *TODO:* Draw a `PolyLine` between a launch site to the selected coastline point
 #
-
-# %%
-# Create a `folium.PolyLine` object using the coastline coordinates and launch site coordinate
-# lines=folium.PolyLine(locations=coordinates, weight=1)
-site_map.add_child(lines)
 
 # %% [markdown]
 # Your updated map with distance line should look like the following screenshot:
@@ -429,22 +465,13 @@ site_map.add_child(lines)
 # </center>
 #
 
-# %%
-# Create a marker with distance to a closest city, railway, highway, etc.
-# Draw a line between the marker to the launch site
-
-
-# %%
-
-# %%
-
 # %% [markdown]
 # After you plot distance lines to the proximities, you can answer the following questions easily:
 #
-# *   Are launch sites in close proximity to railways?
-# *   Are launch sites in close proximity to highways?
-# *   Are launch sites in close proximity to coastline?
-# *   Do launch sites keep certain distance away from cities?
+# *   Are launch sites in close proximity to railways? --Yes
+# *   Are launch sites in close proximity to highways? --No
+# *   Are launch sites in close proximity to coastline? --Yes
+# *   Do launch sites keep certain distance away from cities? --Yes
 #
 # Also please try to explain your findings.
 #
