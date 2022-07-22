@@ -174,8 +174,8 @@ plt.show()
 #
 
 # %%
-dfg = df.groupby(['Orbit'])['Class'].mean()
-dfg.plot(kind='bar', ylabel='Success Rate', xlabel='Orbit')
+dfg = df.groupby(['Orbit'], as_index=False)['Class'].mean()
+sns.barplot(x = 'Orbit', y = 'Class', data=dfg)
 plt.show()
 
 
@@ -249,8 +249,9 @@ def extract_year(df):
 # %%
 # Plot a line chart with x axis to be the extracted year and y axis to be the success rate
 df['Year'] = extract_year(df)
+df.groupby('Year', as_index=False)['Class'].mean()
 
-df.groupby('Year')['Class'].mean().plot(kind='line', ylabel='Success Rate', xlabel='Year')
+sns.lineplot(data=df, x='Year', y='Class')
 plt.show()
 
 
