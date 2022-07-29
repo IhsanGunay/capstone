@@ -313,7 +313,7 @@ tree_cv.score(X_test, Y_test)
 #
 
 # %%
-yhat = svm_cv.predict(X_test)
+yhat = tree_cv.predict(X_test)
 plot_confusion_matrix(Y_test, yhat)
 
 # %% [markdown]
@@ -367,6 +367,18 @@ plot_confusion_matrix(Y_test, yhat)
 #
 
 # %%
+import matplotlib.pyplot as plot
+
+plot.bar(['Logistic Regression',
+          'SVM',
+          'Decision Tree',
+          'KNeighbors'],
+        [logreg_cv.score(X_test, Y_test),
+          svm_cv.score(X_test, Y_test),
+          tree_cv.score(X_test, Y_test),
+          knn_cv.score(X_test, Y_test)])
+
+plot.show()
 
 # %% [markdown]
 # ## Authors

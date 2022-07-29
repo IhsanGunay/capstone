@@ -131,7 +131,7 @@ data = data.rename(columns={"Landing _Outcome": "Landing_Outcome"})
 # %% language="sql"
 # SELECT MIN(DATE)
 # FROM DATA
-# WHERE LANDING_OUTCOME LIKE 'Success%'
+# WHERE LANDING_OUTCOME LIKE 'Success (ground pad)'
 
 # %% [markdown]
 # ### Task 6
@@ -197,7 +197,8 @@ data = data.rename(columns={"Landing _Outcome": "Landing_Outcome"})
 
 # %% [markdown]
 # #### REFERENCE LINKS
-#
+
+# %% [markdown]
 #  *   <a href ="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/instructional-labs.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab : String Patterns, Sorting and Grouping</a>
 #
 #  *  <a  href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Built-in%20functions%20/Hands-on_Lab__Built-in_Functions.md.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01&origin=www.coursera.org">Hands-on Lab: Built-in functions</a>
@@ -207,12 +208,10 @@ data = data.rename(columns={"Landing _Outcome": "Landing_Outcome"})
 #
 #  * <a href= "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%205/DB0201EN-Week3-1-4-Analyzing.ipynb?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDS0321ENSkillsNetwork26802033-2022-01-01">Hands-on Lab: Analyzing a real World Data Set</a>
 #
-
-# %% [markdown]
+#
 # ## Author(s)
 #
 # <h4> Lakshmi Holla </h4>
-#
 
 # %% [markdown]
 # ## Other Contributors
